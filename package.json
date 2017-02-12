@@ -1,0 +1,39 @@
+{
+  "name": "redux bus",
+  "version": "0.0.1",
+  "description": "undoable redux middleware",
+  "main": "src/index.js",
+  "main:next": "src/index.js",
+  "npm": {
+    "esModules": true
+  },
+  "files": [
+    "src",
+    "lib",
+    "es"
+  ],
+  "author": "Wassim @challenger532",
+  "license": "MIT",
+  "scripts": {
+    "build": "true",
+    "dev": "true",
+    "lint": "eslint --cache --quiet src",
+    "autofix": "eslint src/** --fix",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel-eslint": "7.1.1",
+    "babel-loader": "6.2.10",
+    "eslint": "^3.11.1",
+    "eslint-config-aretecode": "^1.0.3",
+    "eslint-loader": "1.5.0",
+    "eslint-plugin-flowtype": "2.28.2",
+    "eslint-plugin-no-for-each": "0.1.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/challenger532/redux-bus.git"
+  }
+}
