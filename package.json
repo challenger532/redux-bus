@@ -1,5 +1,5 @@
 {
-  "name": "redux bus",
+  "name": "redux-bus",
   "version": "0.0.1",
   "description": "undoable redux middleware",
   "main": "src/index.js",
