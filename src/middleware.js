@@ -1,9 +1,19 @@
 export default middlewares => store => next => action => {
-  // location of handlers may change later..
-  if (!action.handler)
+
+  // getting meta from action
+  const meta = action.meta
+  // meta object can be in action itself or in payload, if action has meta, ignore that of the payload
+  if (!meta) {
+    if (action.payload && action.payload.meta) {
+      meta = action.payload.meta
+    }
+  }
+
+  // ignore normal actions with no meta
+  if (!meta)
     return next(action)
 
-  const {handler} = action
+  const {handler} = meta
 
   let middleware = middlewares[handler]
 

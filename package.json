@@ -1,6 +1,6 @@
 {
   "name": "redux-bus",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "undoable redux middleware",
   "main": "src/index.js",
   "main:next": "src/index.js",
