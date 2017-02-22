@@ -25,7 +25,7 @@ const reducerss  = combineReducers({
      ..
      ..
      bus,
-   }, ...)```
+   }, ...)
 
 // apply this middleware, undoLaastaction and holdActions are just predefined samples, use can create you custome:
 import {undoLastaction, holdActions, createBus} from 'redux-bus' 
@@ -38,7 +38,8 @@ const reducerss  = combineReducers({
      ..
      ..
      bus,
-   }, ..., middleware)``     
+   }, ..., middleware)
+```
 // to create custome your custome handler:
 ### Documentation
 
