@@ -30,8 +30,10 @@ const reducerss  = combineReducers({
    }, ...)
 
 
-// apply this middleware, undoLaastaction and holdActions are just predefined samples, use can create you custome:
+// apply this middleware, undoLaastaction and holdActions are just predefined samples, and one custome:
 import {undoLastaction, holdActions, createBus} from 'redux-bus' 
+import your_custome_handler from './your_custome_handler'
+
 let handlersMiddleware = {
   undo: undoLastaction, // this is just a sample, you don't need to add it...
   hold: holdActions, // this is just a sample, you don't need to add it...
@@ -48,18 +50,19 @@ const reducerss  = combineReducers({
      ..
      bus,
    }, ..., middlewares)
+   
+// your_custome_handler.js
+export default (store, next, action, queue, meta) => {
+   // store, next, action are self explanatory.
+   // **queue**: is the queue of the current handler
+   // **meta**: is the object that dispatched within the action.
+   // here you can write your logic, see the exmples below for more clarification
+   
+   // return the queue that must be saved
+   return queue
+}
+
 ```
-
-
-// to create custome your custome handler:
-### Documentation
-
-* [Introduction]
-* [Basics]
-
-### Introducation
-
-### Basics
 
 ### Examples
 
@@ -69,4 +72,4 @@ const reducerss  = combineReducers({
 
 ### Thanks
 
-* [James](https://github.com/aretecode) for a great support
+* [James](https://github.com/aretecode) for the great support
