@@ -32,25 +32,6 @@ const reducerss  = combineReducers({
    })
 ```
 
-### Create Middleware
-```
-// apply this middleware, undoLaastaction and holdActions are just predefined samples, and one custome:
-import {undoLastaction, holdActions, createBus} from 'redux-bus' 
-import your_custome_handler from './your_custome_handler'
-
-let handlersMiddleware = {
-  undo: undoLastaction, // this is just a sample, you don't need to add it...
-  hold: holdActions, // this is just a sample, you don't need to add it...
-  any_name: your_custome_handler,
-  ...
-}
-
-const busMiddleware = createBus(handlersMiddleware)
-     
-// add the middleware
-const middlewares = applyMiddleware([...,busMiddleware,...])
-```
-
 ### Create custome handler
 ```
 // your_custome_handler.js
@@ -64,6 +45,36 @@ export default (store, next, action, queue, meta) => {
    return queue
 }
 ```
+
+### Create Middleware
+```js
+import {createBus} from 'redux-bus' 
+import your_handler from './your_handler'
+
+let handlers = {
+  any_name: your_handler,
+  ...// here you can use any sample check ()
+}
+// creating the bus middleware
+const busMiddleware = createBus(handlers)
+     
+// add the middleware
+const middlewares = applyMiddleware([...,busMiddleware,...])
+```
+
+### Use existing bus
+```js
+import {undoLastaction, holdActions, createBus} from 'redux-bus' 
+
+let handlers = {
+  any_name: your_handler,
+  undo: undoLastaction,
+  hold:  holdActions,
+}
+...
+
+```
+
 
 ### Examples
 
