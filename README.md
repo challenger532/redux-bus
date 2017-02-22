@@ -53,7 +53,7 @@ import {createBus} from 'redux-bus'
 import your_handler from './your_handler'
 
 let handlers = {
-  any_name: your_handler,
+  any_name: your_handler, // the name of the handler to be used later in action.meta
   ...// here you can use any sample check ()
 }
 // creating the bus middleware
@@ -71,7 +71,7 @@ let action = {
     {
       ... , // any data
       meta:{
-        handler:'any_name', // the name of the handler [check here](https://github.com/challenger532/redux-bus/tree/test#create-middleware)
+        handler:'any_name', // the name of the handler
         action:'DO'
       }
     }
@@ -96,9 +96,13 @@ let handlers = {
 ### Use the *undoLastaction* handler
 In this handler only one action is buffered, if new action pushed without doing the existing action, it will be ignored,
 four meta actions can be used:
+
 1-**PUSH**
+
 2-**UNDO**
+
 3-**DO**
+
 4-**DO_PUSH**
 
 ```js
@@ -164,9 +168,13 @@ dispatch(action)
 ### Use the *holdActions* handler
 In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
 three meta actions can be used:
+
 1-**PUSHH**
+
 2-**CLEAR**
+
 3-**POP_AlL**
+
 ```js
 // to PUSH new action
 let action = {
