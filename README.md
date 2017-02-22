@@ -19,6 +19,7 @@ npm  i -S redux-bus
 ```
 
 
+
 ## Usage
 
 ### Reducer
@@ -62,7 +63,26 @@ const busMiddleware = createBus(handlers)
 const middlewares = applyMiddleware([...,busMiddleware,...])
 ```
 
-### Use existing handlers
+### Dispatch Actions
+```js
+let action = {
+  type:'any_type', // you can use any action type, this type will be useful before the handler dispatch the action again.
+  payload:
+    {
+      ... , // any data
+      meta:{
+        handler:'any_name', // the name of the handler [check here](https://github.com/challenger532/redux-bus/tree/test#create-middleware)
+        action:'DO'
+      }
+    }
+}
+dispatch(action)
+```
+
+
+
+## Use existing handlers
+### Add the handlers
 ```js
 import {undoLastaction, holdActions, createBus} from 'redux-bus' 
 
@@ -72,9 +92,16 @@ let handlers = {
   hold:  holdActions,
 }
 ...
+```
+### Use the *undoLastaction* handler
+In this handler only one action is buffered, if new action pushed without doing the existing action, it will be ignored,
+four meta actions can be used:
+1-**PUSH**
+2-**UNDO**
+3-**DO**
+4-**DO_PUSH**
 
-// use undo handler
-
+```js
 // to PUSH new action
 // if an action existed in the buffer it will be removed as if clicking indo
 let action = {
@@ -83,7 +110,7 @@ let action = {
     {
       ... ,// any data here
       meta:{
-        handler:'hold',
+        handler:'undo',
         action:'PUSH'
       }
     }
@@ -98,7 +125,7 @@ let action = {
     {
       ... ,// any data here
       meta:{
-        handler:'hold',
+        handler:'undo',
         action:'UNDO'
       }
     }
@@ -112,7 +139,7 @@ let action = {
   payload:
     {
       meta:{
-        handler:'hold',
+        handler:'undo',
         action:'DO'
       }
     }
@@ -126,15 +153,68 @@ let action = {
     {
       ... , // any data
       meta:{
-        handler:'hold',
-        action:'DO'
+        handler:'undo',
+        action:'DO_PUSH'
       }
     }
 }
 dispatch(action)
 
 ```
+### Use the *holdActions* handler
+In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
+three meta actions can be used:
+1-**PUSHH**
+2-**CLEAR**
+3-**POP_AlL**
+```js
+// to PUSH new action
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      ... ,// any data here
+      meta:{
+        handler:'hold',
+        action:'PUSH'
+      }
+    }
+}
+dispatch(action)
 
+// to UNDO or CLEAR all the buffered actions
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      ... ,// any data here
+      meta:{
+        handler:'hold',
+        action:'CLEAR'
+      }
+    }
+}
+dispatch(action)
+
+// to DO or DISPATCH all the buffered actions, must be four or less.
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      meta:{
+        handler:'hold',
+        action:'POP_ALL'
+      }
+    }
+}
+dispatch(action)
+```
+### TODO
+- [x] create one size action handler, that can undo last dispatched action
+- [ ] create pre defined handler for saving offline dispatched actions
+- [ ] create pre defined handler for delaying actions for specific period
+- [ ] add some docs about usage with redux-ack
+- [ ] create action generator that simplify the module
 
 ### Examples
 
