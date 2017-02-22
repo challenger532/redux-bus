@@ -41,7 +41,7 @@ export default middlewares => store => next => action => {
 
     // actions to update the buffer
     action = {
-      type: 'UPDATE_QUEUE',
+      type: '@@bus/UPDATE_QUEUE',
       payload: {
         queue,
         handler,

@@ -1,6 +1,6 @@
 export default (state = {}, action) => {
   switch (action.type) {
-    case 'UPDATE_QUEUE': {
+    case '@@bus/UPDATE_QUEUE': {
       return updateQueue(state, action)
     }
     default: return state

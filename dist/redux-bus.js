@@ -32,8 +32,17 @@ Object.defineProperty(exports, 'undoLastaction', {
   }
 });
 
+var _hold_actions = require('./samples/hold_actions');
+
+Object.defineProperty(exports, 'holdActions', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_hold_actions).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./middleware":2,"./reducer":3,"./samples/undo_lastaction":4}],2:[function(require,module,exports){
+},{"./middleware":2,"./reducer":3,"./samples/hold_actions":4,"./samples/undo_lastaction":5}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -87,7 +96,7 @@ exports.default = function (middlewares) {
 
           // actions to update the buffer
           action = {
-            type: 'UPDATE_QUEUE',
+            type: '@@bus/UPDATE_QUEUE',
             payload: {
               queue: queue,
               handler: handler
@@ -116,7 +125,7 @@ exports.default = function () {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'UPDATE_QUEUE':
+    case '@@bus/UPDATE_QUEUE':
       {
         return updateQueue(state, action);
       }
@@ -135,6 +144,45 @@ function updateQueue() {
   return _extends({}, bus, _defineProperty({}, handler, queue));
 }
 },{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var HOLD_COUNT = 4;
+
+exports.default = function (store, next, action, queue, meta) {
+  var temp = void 0;
+  switch (meta.action) {
+    case 'PUSH':
+      // push new action, if any action is saved it will be ignored
+      queue.buffer.push(action);
+      break;
+    case 'CLEAR':
+      // remove all buffered actions
+      queue.buffer = [];
+      break;
+    case 'POP_ALL':
+      // do all the actions
+      while (queue.buffer.length > 0) {
+        next(queue.buffer.shift());
+      }
+      break;
+  }
+
+  // in this example the buffer should contains only one item
+  // if you pushed an action before doing the existing one, it will be ignored
+  if (queue.buffer.length > HOLD_COUNT) {
+    for (var i = 0; i < HOLD_COUNT; i++) {
+      temp = queue.buffer.shift();
+      if (temp) next(temp);
+    }
+  }
+
+  // return the queue that must be saved
+  return queue;
+};
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
