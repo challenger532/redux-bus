@@ -30,7 +30,8 @@ export default middlewares => store => next => action => {
     // the handler is attached and passed along
     // so we take it out of the action
     action = Object.assign({}, action)
-    delete action.handler
+    delete action.meta
+    delete action.payload.meta
 
     // this middleware will take a queue and must return a queue
     queue =  middleware(store, next, action, queue, meta)

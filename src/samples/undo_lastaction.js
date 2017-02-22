@@ -12,11 +12,13 @@ export default (store, next, action, queue, meta) => {
       // dispatch the buffered action
       temp = queue.buffer.shift()
       if(temp) next(temp)
+      break;
     case 'DO_PUSH':
       // save new action
       temp = queue.buffer.shift()
       if(temp) next(temp)
       queue.buffer.push(action)
+      break;
   }
 
   // in this example the buffer should contains only one item
