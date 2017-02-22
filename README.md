@@ -1,5 +1,5 @@
 # Redux Bus
-## A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler, one potential use case for this is the undo action which is a buffer on size = 1
+## A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler, one potential use case for this is undoing actions.
 
 
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
@@ -19,8 +19,12 @@ npm  i -S redux-bus
 
 ### Documentation
 
-* [Introduction](http://redux.js.org/docs/introduction/index.html)
-* [Basics](http://redux.js.org/docs/basics/index.html)
+* [Introduction]
+* [Basics]
+
+### Introducation
+
+### Basics
 
 ### Examples
 
