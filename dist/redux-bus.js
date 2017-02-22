@@ -76,7 +76,8 @@ exports.default = function (middlewares) {
           // the handler is attached and passed along
           // so we take it out of the action
           action = Object.assign({}, action);
-          delete action.handler;
+          delete action.meta;
+          delete action.payload.meta;
 
           // this middleware will take a queue and must return a queue
           queue = middleware(store, next, action, queue, meta);
@@ -154,11 +155,13 @@ exports.default = function (store, next, action, queue, meta) {
       // dispatch the buffered action
       temp = queue.buffer.shift();
       if (temp) next(temp);
+      break;
     case 'DO_PUSH':
       // save new action
       temp = queue.buffer.shift();
       if (temp) next(temp);
       queue.buffer.push(action);
+      break;
   }
 
   // in this example the buffer should contains only one item
