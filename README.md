@@ -66,7 +66,7 @@ const middlewares = applyMiddleware([...,busMiddleware,...])
 ### Dispatch Actions
 ```js
 let action = {
-  type:'any_type', // you can use any action type, this type will be useful before the handler dispatch the action again.
+  type:'any_type', // you can use any action type.
   payload:
     {
       ... , // any data
