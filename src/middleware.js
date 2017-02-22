@@ -1,7 +1,7 @@
 export default middlewares => store => next => action => {
 
   // getting meta from action
-  const meta = action.meta
+  let meta = action.meta
   // meta object can be in action itself or in payload, if action has meta, ignore that of the payload
   if (!meta) {
     if (action.payload && action.payload.meta) {
