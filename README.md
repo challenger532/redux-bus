@@ -32,8 +32,8 @@ const reducerss  = combineReducers({
    })
 ```
 
-### Create custome handler
-```
+### Create your handler
+```js
 // your_custome_handler.js
 export default (store, next, action, queue, meta) => {
    // store, next, action are self explanatory.
@@ -62,7 +62,7 @@ const busMiddleware = createBus(handlers)
 const middlewares = applyMiddleware([...,busMiddleware,...])
 ```
 
-### Use existing bus
+### Use existing handlers
 ```js
 import {undoLastaction, holdActions, createBus} from 'redux-bus' 
 
@@ -72,6 +72,66 @@ let handlers = {
   hold:  holdActions,
 }
 ...
+
+// use undo handler
+
+// to PUSH new action
+// if an action existed in the buffer it will be removed as if clicking indo
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      ... ,// any data here
+      meta:{
+        handler:'hold',
+        action:'PUSH'
+      }
+    }
+}
+dispatch(action)
+
+// to UNDO the last buffered action
+// if an action existed in the buffer it will be removed
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      ... ,// any data here
+      meta:{
+        handler:'hold',
+        action:'UNDO'
+      }
+    }
+}
+dispatch(action)
+
+// to DO the last buffered action
+// if an action existed in the buffer it will be removed
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      meta:{
+        handler:'hold',
+        action:'DO'
+      }
+    }
+}
+dispatch(action)
+
+// to DO the last buffered action and PUSH  new one
+let action = {
+  type:'any_type', // you can use any action type,
+  payload:
+    {
+      ... , // any data
+      meta:{
+        handler:'hold',
+        action:'DO'
+      }
+    }
+}
+dispatch(action)
 
 ```
 
