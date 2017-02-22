@@ -20,6 +20,8 @@ npm  i -S redux-bus
 
 
 ## Usage
+
+### Reducer
 ```js
 // include the reducer while creating the store:
 import {reducer as bus} from 'redux-bus'
@@ -27,9 +29,11 @@ const reducerss  = combineReducers({
      ..
      ..
      bus,
-   }, ...)
+   })
+```
 
-
+### Create Middleware
+```
 // apply this middleware, undoLaastaction and holdActions are just predefined samples, and one custome:
 import {undoLastaction, holdActions, createBus} from 'redux-bus' 
 import your_custome_handler from './your_custome_handler'
@@ -45,12 +49,10 @@ const busMiddleware = createBus(handlersMiddleware)
      
 // add the middleware
 const middlewares = applyMiddleware([...,busMiddleware,...])
-const reducerss  = combineReducers({
-     ..
-     ..
-     bus,
-   }, ..., middlewares)
-   
+```
+
+### Create custome handler
+```
 // your_custome_handler.js
 export default (store, next, action, queue, meta) => {
    // store, next, action are self explanatory.
@@ -61,7 +63,6 @@ export default (store, next, action, queue, meta) => {
    // return the queue that must be saved
    return queue
 }
-
 ```
 
 ### Examples
