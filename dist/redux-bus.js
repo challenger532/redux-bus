@@ -7,23 +7,32 @@ Object.defineProperty(exports, "__esModule", {
 
 var _middleware = require('./middleware');
 
-var _middleware2 = _interopRequireDefault(_middleware);
+Object.defineProperty(exports, 'createBus', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_middleware).default;
+  }
+});
 
 var _reducer = require('./reducer');
 
-var _reducer2 = _interopRequireDefault(_reducer);
+Object.defineProperty(exports, 'reducer', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_reducer).default;
+  }
+});
 
 var _undo_lastaction = require('./samples/undo_lastaction');
 
-var _undo_lastaction2 = _interopRequireDefault(_undo_lastaction);
+Object.defineProperty(exports, 'undoLastaction', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_undo_lastaction).default;
+  }
+});
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-  createBus: _middleware2.default,
-  reducer: _reducer2.default,
-  undoLastaction: _undo_lastaction2.default
-};
 },{"./middleware":2,"./reducer":3,"./samples/undo_lastaction":4}],2:[function(require,module,exports){
 'use strict';
 
@@ -70,7 +79,7 @@ exports.default = function (middlewares) {
           delete action.handler;
 
           // this middleware will take a queue and must return a queue
-          queue = middleware(store, next, action, queue);
+          queue = middleware(store, next, action, queue, meta);
 
           // add validation that the return of the middleware is queue
           if (!queue.buffer && !queue.buffer.length) return;
@@ -131,22 +140,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (store, next, action, queue) {
-  if (queue.buffer.length > 0) {
-    switch (action.type) {
-      case 'UNDO':
-        queue.buffer.pop();
-      case 'DO':
-        next(queue.buffer.shift());
-      default:
-        next(queue.buffer.shift());
-    }
-    return queue;
+exports.default = function (store, next, action, queue, meta) {
+  var temp = void 0;
+  switch (meta.action) {
+    case 'UNDO':
+      queue.buffer.pop();
+      break;
+    case 'PUSH':
+      // save new action, if any action is saved it will be ignored
+      queue.buffer.push(action);
+      break;
+    case 'DO':
+      // dispatch the buffered action
+      temp = queue.buffer.shift();
+      if (temp) next(temp);
+    case 'DO_PUSH':
+      // save new action
+      temp = queue.buffer.shift();
+      if (temp) next(temp);
+      queue.buffer.push(action);
   }
-  // push the action to the buffer
-  if (action) queue.buffer.push(action);
 
   // in this example the buffer should contains only one item
+  // if you pushed an action before doing the existing one, it will be ignored
   if (queue.buffer.length > 1) queue.buffer.shift();
 
   // return the queue that must be saved

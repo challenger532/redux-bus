@@ -33,7 +33,7 @@ export default middlewares => store => next => action => {
     delete action.handler
 
     // this middleware will take a queue and must return a queue
-    queue =  middleware(store, next, action, queue)
+    queue =  middleware(store, next, action, queue, meta)
 
     // add validation that the return of the middleware is queue
     if (!queue.buffer && !queue.buffer.length) return
