@@ -1,12 +1,34 @@
+ 1 NERD_tree_1   1 README.md                                                                                                                                                                                                                        << X < README.md 
 # Redux Bus
 ### A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
-one potential use case for this is undoing actions.
+##### one potential use case for this is undoing actions.
 
 
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 [![npm downloads](https://img.shields.io/npm/dm/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 
+
+## [Index](#index)
+* [What is Redux Bus?](#what-is-redux-bus)
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+  - [Reducer](#reducer)
+  - [Create your handler](#create-your-handler)
+  - [Create middleware](#create-middleware)
+  - [Dispatch Actions](#dispatch-actions)
+* [Use existing handlers](#use-existing-handlers)
+  - [Add the handlers](#add-the-handler)
+  - [Use the undoLastaction handler](#use-the-undolastaction-handler)
+  - [Use the holdActions handler](#use-the-holdactions-handler)
+ * [TODO](#todo)
+ * [Examples](#examples)
+ * [Thanks](#thanks)
+ 
+## What is Redux Bus
+A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
+## Features
 ## Installation
 
 To install the stable version:
@@ -16,7 +38,7 @@ npm install --save redux-bus
 ```
 or
 ```
-npm  i -S redux-bus
+npm  i -S redux-bus                   
 ```
 
 
@@ -63,7 +85,6 @@ const busMiddleware = createBus(handlers)
 // add the middleware
 const middlewares = applyMiddleware([...,busMiddleware,...])
 ```
-
 ### Dispatch Actions
 ```js
 let action = {
@@ -165,6 +186,20 @@ let action = {
 }
 dispatch(action)
 
+### Dispatch Actions
+```js
+let action = {
+  type:'any_type', // you can use any action type.
+  payload:
+    {
+      ... , // any data
+      meta:{
+        handler:'any_name', // the name of the handler
+        action:'DO'
+      }
+    }
+}
+dispatch(action)
 ```
 ### Use the *holdActions* handler
 In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
@@ -230,7 +265,7 @@ dispatch(action)
 * [Hold soome actions](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js))
 * [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js))
 
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 ### Thanks
 
-* [James](https://github.com/aretecode) for the great support
+* [James](https://github.com/aretecode) for the great support                                                                                        
