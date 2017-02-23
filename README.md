@@ -186,8 +186,6 @@ let action = {
 }
 dispatch(action)
 
-### Dispatch Actions
-```js
 let action = {
   type:'any_type', // you can use any action type.
   payload:
