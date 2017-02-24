@@ -1,4 +1,3 @@
- 1 NERD_tree_1   1 README.md                                                                                                                                                                                                                        << X < README.md 
 # Redux Bus
 ### A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
 ##### one potential use case for this is undoing actions.
@@ -11,7 +10,6 @@
 
 ## [Index](#index)
 * [What is Redux Bus?](#what-is-redux-bus)
-* [Features](#features)
 * [Installation](#installation)
 * [Usage](#usage)
   - [Reducer](#reducer)
@@ -28,7 +26,6 @@
  
 ## What is Redux Bus
 A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
-## Features
 ## Installation
 
 To install the stable version:
@@ -94,7 +91,7 @@ let action = {
       ... , // any data
       meta:{
         handler:'any_name', // the name of the handler
-        action:'ACtION_NAME'// ex: DO, PUSH, POP, CANCEL, CANCEL_ALL
+        action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
       }
     }
 }
@@ -256,7 +253,7 @@ dispatch(action)
 - [ ] create pre defined handler for saving offline dispatched actions
 - [ ] create pre defined handler for delaying actions for specific period
 - [ ] add some docs about usage with redux-ack
-- [ ] create action generator that simplify the usage of the module
+- [ ] create action generator that simplify the module
 
 ### Examples
 
