@@ -94,7 +94,7 @@ let action = {
       ... , // any data
       meta:{
         handler:'any_name', // the name of the handler
-        action:'DO'
+        action:'ACtION_NAME'// ex: DO, PUSH, POP, CANCEL, CANCEL_ALL
       }
     }
 }
@@ -256,11 +256,11 @@ dispatch(action)
 - [ ] create pre defined handler for saving offline dispatched actions
 - [ ] create pre defined handler for delaying actions for specific period
 - [ ] add some docs about usage with redux-ack
-- [ ] create action generator that simplify the module
+- [ ] create action generator that simplify the usage of the module
 
 ### Examples
 
-* [Hold soome actions](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js))
+* [Hold some actions](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js))
 * [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js))
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                    
