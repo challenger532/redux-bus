@@ -1,4 +1,5 @@
 # Redux Bus
+[![NPM](https://nodei.co/npm/redux-actions.png?downloads=true)](https://nodei.co/npm/redux-bus/)
 ### A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
 ##### one potential use case for this is undoing actions.
 
