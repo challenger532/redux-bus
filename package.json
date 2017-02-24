@@ -1,7 +1,7 @@
 {
   "escapedName": "redux-bus",
   "name": "redux-bus",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "undoable redux middleware",
   "main": "lib/index.js",
   "main:next": "lib/index.js",
