@@ -10,7 +10,6 @@
 
 ## [Index](#index)
 * [What is Redux Bus?](#what-is-redux-bus)
-* [Features](#features)
 * [Installation](#installation)
 * [Usage](#usage)
   - [Reducer](#reducer)
@@ -27,7 +26,6 @@
  
 ## What is Redux Bus
 A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
-## Features
 ## Installation
 
 To install the stable version:
