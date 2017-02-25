@@ -170,11 +170,8 @@ let action = {
   type:'any_type', // you can use any action type,
   payload:
     {
-      ... , // any data, if no data, meta can be child of action
-      meta:{
-        handler:'undo',
-        action:'DO_PUSH'
-      }
+      ... , // any data, note that if no data!, remember that meta can be child of action
+      meta: 'undo DO_PUSH',
     }
 }
 dispatch(action)
@@ -184,10 +181,7 @@ let action = {
   payload:
     {
       ... , // any data
-      meta:{
-        handler:'any_name', // the name of the handler
-        action:'DO'
-      }
+      meta: 'any_name DO'
     }
 }
 dispatch(action)
