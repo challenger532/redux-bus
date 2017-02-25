@@ -60,10 +60,13 @@ const reducers  = combineReducers({
 ```js
 // your_custome_handler.js
 export default (store, next, action, queue, meta) => {
-   // store, next, action are self explanatory.
-   // **queue**: is the queue of the current handler
-   // **meta**: is the object that dispatched within the action.
-   // here you can write your logic, see the exmples below for more clarification
+   /*
+    store, next, action are self explanatory.
+    queue: is the queue of the current handler
+    meta: is the object that dispatched within the action.
+    here you can write your logic, see the exmples below for more
+    clarification
+   */
    
    // return the queue that must be saved
    return queue
@@ -77,7 +80,7 @@ import your_handler from './your_handler'
 
 let handlers = {
   any_name: your_handler, // the name of the handler to be used later in action.meta
-  ...// here you can use any sample check ()
+  ...,// here you can use any sample check ()
 }
 // creating the bus middleware
 const busMiddleware = createBus(handlers)
@@ -93,11 +96,14 @@ let action = {
     {
       ... , // any data
       meta: 'any_name ACTION_NAME', // a shortcut for what's  below 
-      // OR you can set this:
-      // meta:{
-      //  handler:'any_name', // the name of the handler
-      //  action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
-      // }
+      /*
+      OR
+      meta:{
+        handler:'any_name', // the name of the handler
+        action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
+      }
+      */
+    
     }
 }
 dispatch(action)
@@ -123,11 +129,6 @@ four meta actions can be used:
 
 1-**PUSH**
 
-2-**UNDO**
-
-3-**DO**
-
-4-**DO_PUSH**
 
 ```js
 // to PUSH new action
@@ -137,18 +138,29 @@ let action = {
   payload:
     {
       ... ,// any data here
-      meta: 'undo PUSH'
-      // or can set it like : meta: {
-                                handler: 'undo',
-                                action: 'PUSH',
-                              }
+      meta: 'undo PUSH',
+      
+      /*
+      Or
+      meta: {
+        handler: 'undo',
+        action: 'PUSH',
+      }
+      */
       }
     }
-    // Note: you can set the payload here, out of the payload.
-    //       which is very userful when action has no payload.
+    
+    /*
+    or
+    meta: 'undo PUSH',
+    */
 }
 dispatch(action)
+```
 
+
+2-**UNDO**
+```js
 // to UNDO the last buffered action
 // if an action existed in the buffer it will be removed
 let action = {
@@ -156,7 +168,11 @@ let action = {
   meta: 'undo UNDO',
 }
 dispatch(action)
+```
 
+3-**DO**
+
+```js
 // to DO the last buffered action
 // if an action existed in the buffer it will be removed
 let action = {
@@ -164,13 +180,17 @@ let action = {
   meta: undo' DO',
 }
 dispatch(action)
+```
 
+
+4-**DO_PUSH**
+```js
 // to DO the last buffered action and PUSH  new one
 let action = {
   type:'any_type', // you can use any action type,
   payload:
     {
-      ... , // any data, note that if no data!, remember that meta can be child of action
+      ... , // any data,
       meta: 'undo DO_PUSH',
     }
 }
@@ -186,15 +206,15 @@ let action = {
 }
 dispatch(action)
 ```
+
+
+
 ### Use the *holdActions* handler
 In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
 three meta actions can be used:
 
 1-**PUSH**
 
-2-**CLEAR**
-
-3-**POP_ALL**
 
 ```js
 // to PUSH new action
@@ -207,13 +227,20 @@ let action = {
     }
 }
 dispatch(action)
+```
 
+2-**CLEAR**
+```js
 // to UNDO or CLEAR all the buffered actions
 let action = {
   type: 'any_type', // you can use any action type,
   meta: 'hold CLEAR'
 }
 dispatch(action)
+```
+
+3-**POP_ALL**
+```js
 
 // to DO or DISPATCH all the buffered actions, must be four or less.
 let action = {
