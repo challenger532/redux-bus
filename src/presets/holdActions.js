@@ -4,7 +4,7 @@ export default (store, next, action, queue, meta) => {
   let temp
   switch (meta.action) {
     case 'PUSH':
-      // push new action, if any action is saved it will be ignored
+      // push new action, if any action is saved, it will be ignored
       queue.buffer.push(action)
       break
     case 'CLEAR':

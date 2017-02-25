@@ -1,4 +1,10 @@
 export {default as createBus} from './middleware'
 export {default as reducer} from './reducer'
-export {default as undoLastaction} from './samples/undo_lastaction'
-export {default as holdActions} from './samples/hold_actions'
+export {default as undoLastAction} from './presets/undoLastAction'
+export {default as holdActions} from './presets/holdActions'
+export default {
+  reducer: exports.reducer,
+  createBus: exports.createBus,
+  holdActions: exports.holdActions,
+  undoLastAction: exports.undoLastAction,
+}

@@ -1,7 +1,7 @@
 {
   "escapedName": "redux-bus",
   "name": "redux-bus",
-  "version": "0.0.16",
+  "version": "0.1.0",
   "description": "undoable redux middleware",
   "main": "lib/index.js",
   "main:next": "lib/index.js",
@@ -23,7 +23,9 @@
     "autofix": "eslint src/** --fix",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "html-webpack-plugin": "^2.28.0"
+  },
   "devDependencies": {
     "babel-core": "^6.7.6",
     "babel-eslint": "7.1.1",

@@ -1,26 +1,25 @@
 export default middlewares => store => next => action => {
-
   // getting meta from action
   let meta = action.meta
-  // meta object can be in action itself or in payload, if action has meta, ignore that of the payload
+
+  // meta object can be in action itself or in payload,
+  // if action has .meta,
+  // ignore that of the payload
   if (!meta) {
     if (action.payload && action.payload.meta) {
       meta = action.payload.meta
     }
   }
 
-  meta = meta_parser(meta)
+  meta = metaParser(meta)
 
-  // ignore normal actions with no meta
-  if (!meta)
-    return next(action)
-
+  // ignore normal actions with no .meta
+  if (!meta) return next(action)
   const {handler} = meta
-
   let middleware = middlewares[handler]
 
   if (middleware) {
-    // bus is not initialized, so it must be validated..
+    // bus has not been initialized, so it must be validated..
     let bus = store.getState().bus || {}
 
     // queue is an object
@@ -54,8 +53,11 @@ export default middlewares => store => next => action => {
   return next(action)
 }
 
-//fix meta, allowing to dispatch actions with meta as string value ex: meta:'undoLasaction UNDO'
-const meta_parser = meta => {
+// fix .meta,
+// allowing actions to be dispatch with .meta as string value
+// @example:
+// `meta: 'undoLasaction UNDO'`
+const metaParser = meta => {
   if (!meta) return
 
   if (typeof meta === 'string') {
@@ -71,4 +73,3 @@ const meta_parser = meta => {
   return meta
 
 }
-

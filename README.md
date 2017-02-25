@@ -1,8 +1,7 @@
 # Redux Bus
 [![NPM](https://nodei.co/npm/redux-bus.png?downloads=true)](https://nodei.co/npm/redux-bus/)
 
-### A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
-##### one potential use case for this is undoing actions.
+### Redux middleware that makes it easy to create buffers with handlers.
 
 
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
@@ -18,29 +17,25 @@
   - [Create your handler](#create-your-handler)
   - [Create middleware](#create-middleware)
   - [Dispatch Actions](#dispatch-actions)
-* [Use existing handlers](#use-existing-handlers)
+* [Presets](#presets)
   - [Add the handlers](#add-the-handler)
-  - [Use the undoLastaction handler](#use-the-undolastaction-handler)
+  - [Use the undoLastAction handler](#use-the-undolastaction-handler)
   - [Use the holdActions handler](#use-the-holdactions-handler)
  * [TODO](#todo)
  * [Examples](#examples)
+ * [Resources](#resources)
  * [Thanks](#thanks)
- 
+
 ## What is Redux Bus
-A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
+redux middleware that allows using buffers for undoable actions, and potentially much more.
 
 ## Installation
 
 To install the stable version:
 
-```
+```bash
 npm install --save redux-bus
 ```
-or
-```
-npm  i -S redux-bus                   
-```
-
 
 
 ## Usage
@@ -49,22 +44,22 @@ npm  i -S redux-bus
 ```js
 // include the reducer while creating the store:
 import {reducer as bus} from 'redux-bus'
-const reducers  = combineReducers({
-     ..
-     ..
-     bus,
-   })
+const reducers = combineReducers({
+   ...
+   ...
+   bus,
+ })
 ```
 
 ### Create your handler
+-**queue**: is the queue of the current handler
+-**meta**: is the object that dispatched within the action.
+
 ```js
-// your_custome_handler.js
+// your-magic-handler.js
 export default (store, next, action, queue, meta) => {
-   // store, next, action are self explanatory.
-   // **queue**: is the queue of the current handler
-   // **meta**: is the object that dispatched within the action.
-   // here you can write your logic, see the exmples below for more clarification
-   
+   // here you can write your logic,
+   // see the examples below for more clarification
    // return the queue that must be saved
    return queue
 }
@@ -72,53 +67,72 @@ export default (store, next, action, queue, meta) => {
 
 ### Create Middleware
 ```js
-import {createBus} from 'redux-bus' 
-import your_handler from './your_handler'
+import {createBus} from 'redux-bus'
+import yourHandler from './yourHandler'
 
 let handlers = {
-  any_name: your_handler, // the name of the handler to be used later in action.meta
-  ...// here you can use any sample check ()
+  // the name of the handler to be used later in action.meta
+  // can be anything
+  chooseYourOwnAdventure: yourHandler,
+  // here you can use any sample check ()
+  // ...
 }
+
 // creating the bus middleware
 const busMiddleware = createBus(handlers)
-     
-// add the middleware
-const middlewares = applyMiddleware([...,busMiddleware,...])
+
+// add the middleware alongside the rest of your middleware
+const middlewares = applyMiddleware([..., busMiddleware, ...])
 ```
+
 ### Dispatch Actions
+
+#### shorthand
 ```js
 let action = {
-  type:'any_type', // you can use any action type.
-  payload:
-    {
-      ... , // any data
-      meta: 'any_name ACTION_NAME', // a shortcut for what's  below 
-      // OR you can set this:
-      // meta:{
-      //  handler:'any_name', // the name of the handler
-      //  action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
-      // }
-    }
+  // @NOTE:
+  // you can use any action type.
+  type: 'chooseYourOwnAdventure',
+  payload: {
+    // ... any other data in your payload
+    meta: 'anyHandlerName ACTION_NAME',
+  },
 }
 dispatch(action)
 ```
 
+#### longhand
+```js
+let action = {
+  // @NOTE:
+  // you can use any action type.
+  meta: {
+    // the name of the handler
+    handler: 'chooseYourOwnAdventure',
 
+    // @example: DO, UNDO, PUSH, POP, CANCEL_ALL
+    action: 'ACTION_NAME',
+  },
+}
+dispatch(action)
 
-## Use existing handlers
+```
+
+## Presets
 ### Add the handlers
 ```js
-import {undoLastaction, holdActions, createBus} from 'redux-bus' 
+import {undoLastAction, holdActions, createBus} from 'redux-bus'
 
 let handlers = {
-  any_name: your_handler,
-  undo: undoLastaction,
-  hold:  holdActions,
+  chooseYourOwnAdventure: yourHandlerHere,
+  undo: undoLastAction,
+  hold: holdActions,
 }
-...
 ```
-### Use the *undoLastaction* handler
-In this handler only one action is buffered, if new action pushed without doing the existing action, it will be ignored,
+
+
+### Use the *undoLastAction* handler
+In this handler, only one action is buffered, if new action pushed without doing the existing action, it will be ignored,
 four meta actions can be used:
 
 1-**PUSH**
@@ -130,29 +144,22 @@ four meta actions can be used:
 4-**DO_PUSH**
 
 ```js
-// to PUSH new action
-// if an action existed in the buffer it will be removed as if clicking indo
+// to PUSH a new action
+// if an action already exists in the buffer, it will be removed, as if clicking undo
 let action = {
-  type:'any_type', // you can use any action type,
-  payload:
-    {
-      ... ,// any data here
-      meta: 'undo PUSH'
-      // or can set it like : meta: {
-                                handler: 'undo',
-                                action: 'PUSH',
-                              }
-      }
-    }
-    // Note: you can set the payload here, out of the payload.
-    //       which is very userful when action has no payload.
+  type: 'chooseYourOwnAdventure',
+  payload: {
+    meta: 'undo PUSH'
+  }
+  // @note: you can set the payload here, out of the payload.
+  //        which is very useful when an action has no payload.
 }
 dispatch(action)
 
 // to UNDO the last buffered action
 // if an action existed in the buffer it will be removed
 let action = {
-  type:'any_type', // you can use any action type,
+  type: 'chooseYourOwnAdventure',
   meta: 'undo UNDO',
 }
 dispatch(action)
@@ -160,34 +167,34 @@ dispatch(action)
 // to DO the last buffered action
 // if an action existed in the buffer it will be removed
 let action = {
-  type:'any_type', // you can use any action type,
-  meta: undo' DO',
+  type: 'chooseYourOwnAdventure',
+  meta: 'undo DO',
 }
 dispatch(action)
 
-// to DO the last buffered action and PUSH  new one
+// to DO the last buffered action and PUSH new one
 let action = {
-  type:'any_type', // you can use any action type,
-  payload:
-    {
-      ... , // any data, note that if no data!, remember that meta can be child of action
-      meta: 'undo DO_PUSH',
-    }
+  type: 'chooseYourOwnAdventure',
+  payload: {
+    // @NOTE: meta can be a child of an action
+    meta: 'undo DO_PUSH',
+  },
 }
 dispatch(action)
 
 let action = {
-  type:'any_type', // you can use any action type.
-  payload:
-    {
-      ... , // any data
-      meta: 'any_name DO'
-    }
+  type: 'chooseYourOwnAdventure',
+  payload: {
+    meta: 'anyHandlerName DO'
+  }
 }
 dispatch(action)
 ```
+
+
 ### Use the *holdActions* handler
-In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
+In this handler, action can't be dispatched by themselves. Actions are held until more than four actions in the buffer. When there are more than four, all held actions are dispatched at once.
+
 three meta actions can be used:
 
 1-**PUSH**
@@ -199,42 +206,48 @@ three meta actions can be used:
 ```js
 // to PUSH new action
 let action = {
-  type:'any_type', // you can use any action type,
-  payload:
-    {
-      ... ,// any data here
-      meta: 'hold PUSH'
-    }
+  type: 'chooseYourOwnAdventure',
+  payload: {
+    meta: 'hold PUSH'
+  },
 }
 dispatch(action)
 
 // to UNDO or CLEAR all the buffered actions
 let action = {
-  type: 'any_type', // you can use any action type,
-  meta: 'hold CLEAR'
+  type: 'chooseYourOwnAdventure',
+  meta: 'hold CLEAR',
 }
 dispatch(action)
 
-// to DO or DISPATCH all the buffered actions, must be four or less.
+// to DO or DISPATCH all the buffered actions,
+// must be four or less.
 let action = {
-  type: 'any_type', // you can use any action type,
-  meta: 'hold POP_ALL'
+  type: 'chooseYourOwnAdventure',
+  meta: 'hold POP_ALL',
 }
 dispatch(action)
 ```
+
 ### TODO
 - [x] create one size action handler, that can undo last dispatched action
 - [ ] create pre defined handler for saving offline dispatched actions
 - [ ] create pre defined handler for delaying actions for specific period
 - [ ] add some docs about usage with redux-ack
 - [ ] create action generator that simplify the module
+- [ ] add tests
 
 ### Examples
 
-* [Hold some actions](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/hold_actions.js))
-* [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/samples/undo_lastaction.js))
+* [Hold some actions](https://github.com/challenger532/redux-bus/blob/master/src/presets/holdActions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/holdActions.js))
+* [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/presets/undoLastAction.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/undoLastAction.js))
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+### Resources
+- http://redux.js.org/docs/advanced/Middleware.html
+- https://medium.com/@meagle/understanding-87566abcfb7a
+- https://github.com/gaearon/redux-thunk
+
 ### Thanks
 
 * [James](https://github.com/aretecode) for the great support                                                                                        
