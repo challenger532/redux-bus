@@ -63,6 +63,8 @@ exports.default = function (middlewares) {
           }
         }
 
+        meta = meta_parser(meta);
+
         // ignore normal actions with no meta
         if (!meta) return next(action);
 
@@ -108,6 +110,25 @@ exports.default = function (middlewares) {
       };
     };
   };
+};
+
+//fix meta, allowing to dispatch actions with meta as string value ex: meta:'undoLasaction UNDO'
+
+
+var meta_parser = function meta_parser(meta) {
+  if (!meta) return;
+
+  if (typeof meta === 'string') {
+    var content = meta.split(' ');
+    var length = content.length;
+    var result = {
+      handler: length > 0 ? content[0] || '' : '',
+      action: length > 1 ? content[1] || '' : ''
+    };
+    return result;
+  }
+
+  return meta;
 };
 },{}],3:[function(require,module,exports){
 'use strict';

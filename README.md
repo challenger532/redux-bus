@@ -28,6 +28,7 @@
  
 ## What is Redux Bus
 A middleware for redux that makes it easy to create buffers with handlers, every buffer has one handler.
+
 ## Installation
 
 To install the stable version:
@@ -48,7 +49,7 @@ npm  i -S redux-bus
 ```js
 // include the reducer while creating the store:
 import {reducer as bus} from 'redux-bus'
-const reducerss  = combineReducers({
+const reducers  = combineReducers({
      ..
      ..
      bus,
@@ -91,10 +92,12 @@ let action = {
   payload:
     {
       ... , // any data
-      meta:{
-        handler:'any_name', // the name of the handler
-        action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
-      }
+      meta: 'any_name ACTION_NAME', // a shortcut for what's  below 
+      // OR you can set this:
+      // meta:{
+      //  handler:'any_name', // the name of the handler
+      //  action:'ACTION_NAME' // ex: DO, UNDO, PUSH, POP, CANCEL_ALL
+      // }
     }
 }
 dispatch(action)
@@ -134,11 +137,15 @@ let action = {
   payload:
     {
       ... ,// any data here
-      meta:{
-        handler:'undo',
-        action:'PUSH'
+      meta: 'undo PUSH'
+      // or can set it like : meta: {
+                                handler: 'undo',
+                                action: 'PUSH',
+                              }
       }
     }
+    // Note: you can set the payload here, out of the payload.
+    //       which is very userful when action has no payload.
 }
 dispatch(action)
 
@@ -146,14 +153,7 @@ dispatch(action)
 // if an action existed in the buffer it will be removed
 let action = {
   type:'any_type', // you can use any action type,
-  payload:
-    {
-      ... ,// any data here
-      meta:{
-        handler:'undo',
-        action:'UNDO'
-      }
-    }
+  meta: 'undo UNDO',
 }
 dispatch(action)
 
@@ -161,13 +161,7 @@ dispatch(action)
 // if an action existed in the buffer it will be removed
 let action = {
   type:'any_type', // you can use any action type,
-  payload:
-    {
-      meta:{
-        handler:'undo',
-        action:'DO'
-      }
-    }
+  meta: undo' DO',
 }
 dispatch(action)
 
@@ -176,7 +170,7 @@ let action = {
   type:'any_type', // you can use any action type,
   payload:
     {
-      ... , // any data
+      ... , // any data, if no data, meta can be child of action
       meta:{
         handler:'undo',
         action:'DO_PUSH'
@@ -202,7 +196,7 @@ dispatch(action)
 In this handler any actoin can't be dispatched alone, it holds the actions until more than four actions in the buffer, then four actions are dispatched at once
 three meta actions can be used:
 
-1-**PUSHH**
+1-**PUSH**
 
 2-**CLEAR**
 
@@ -215,38 +209,22 @@ let action = {
   payload:
     {
       ... ,// any data here
-      meta:{
-        handler:'hold',
-        action:'PUSH'
-      }
+      meta: 'hold PUSH'
     }
 }
 dispatch(action)
 
 // to UNDO or CLEAR all the buffered actions
 let action = {
-  type:'any_type', // you can use any action type,
-  payload:
-    {
-      ... ,// any data here
-      meta:{
-        handler:'hold',
-        action:'CLEAR'
-      }
-    }
+  type: 'any_type', // you can use any action type,
+  meta: 'hold CLEAR'
 }
 dispatch(action)
 
 // to DO or DISPATCH all the buffered actions, must be four or less.
 let action = {
-  type:'any_type', // you can use any action type,
-  payload:
-    {
-      meta:{
-        handler:'hold',
-        action:'POP_ALL'
-      }
-    }
+  type: 'any_type', // you can use any action type,
+  meta: 'hold POP_ALL'
 }
 dispatch(action)
 ```

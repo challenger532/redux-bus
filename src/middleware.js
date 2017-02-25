@@ -9,6 +9,8 @@ export default middlewares => store => next => action => {
     }
   }
 
+  meta = meta_parser(meta)
+
   // ignore normal actions with no meta
   if (!meta)
     return next(action)
@@ -51,3 +53,22 @@ export default middlewares => store => next => action => {
   }
   return next(action)
 }
+
+//fix meta, allowing to dispatch actions with meta as string value ex: meta:'undoLasaction UNDO'
+const meta_parser = meta => {
+  if (!meta) return
+
+  if (typeof meta === 'string') {
+    const content = meta.split(' ')
+    const length = content.length
+    const result = {
+      handler: length > 0 ? (content[0] || '') : '',
+      action: length > 1 ? (content[1] || '') : '',
+    }
+    return result
+  }
+
+  return meta
+
+}
+
