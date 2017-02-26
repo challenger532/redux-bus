@@ -23,9 +23,6 @@
     "autofix": "eslint src/** --fix",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
-  "dependencies": {
-    "html-webpack-plugin": "^2.28.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.7.6",
