@@ -7,7 +7,6 @@
 [![Join the chat at https://gitter.im/Challenger532/Lobby#](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Challenger532/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
-[![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 [![npm downloads](https://img.shields.io/npm/dm/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 
@@ -38,6 +37,10 @@ To install the stable version:
 
 ```bash
 npm install --save redux-bus
+```
+or
+```bash
+npm i -S redux-bus
 ```
 
 
