@@ -20,6 +20,7 @@
   - [Dispatch Actions](#dispatch-actions)
 * [Presets](#presets)
   - [Add the handlers](#add-the-handler)
+  - [Use the network handler](#use-the-network-handler)
   - [Use the undoLastAction handler](#use-the-undolastaction-handler)
   - [Use the holdActions handler](#use-the-holdactions-handler)
  * [TODO](#todo)
