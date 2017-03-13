@@ -1,15 +1,14 @@
 # Redux Bus
-[![NPM](https://nodei.co/npm/redux-bus.png?downloads=true)](https://nodei.co/npm/redux-bus/)
 
 ### Redux middleware that makes it easy to create buffers with handlers.
 
+![](/home/challenger/Pictures/fifo.png)![](/home/challenger/Pictures/fifo2.png) 
 
 [![Join the chat at https://gitter.im/Challenger532/Lobby#](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Challenger532/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![npm version](https://img.shields.io/npm/v/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 [![npm downloads](https://img.shields.io/npm/dm/redux-bus.svg?style=flat-square)](https://www.npmjs.com/package/redux-bus)
-
 
 ## [Index](#index)
 * [What is Redux Bus?](#what-is-redux-bus)
@@ -38,11 +37,6 @@ To install the stable version:
 ```bash
 npm install --save redux-bus
 ```
-or
-```bash
-npm i -S redux-bus
-```
-
 
 ## Usage
 
@@ -127,13 +121,68 @@ dispatch(action)
 ## Presets
 ### Add the handlers
 ```js
-import {undoLastAction, holdActions, createBus} from 'redux-bus'
+import {undoLastAction, holdActions, network, createBus} from 'redux-bus'
 
 let handlers = {
   chooseYourOwnAdventure: yourHandlerHere,
   undo: undoLastAction,
   hold: holdActions,
+  network: network,
 }
+```
+
+### Use the *network* handler
+In this handler, if the state is offline, actions are buffered, until state changed to online, default state is online.
+four meta actions can be used:
+
+1-**save**
+
+2-**go-online**
+
+3-**go-offline**
+
+4-**cancel-all**
+
+```js
+// to save an action if it's offline mode,
+
+let action = {
+  type: 'chooseYourOwnAdventure',
+  meta: 'network save'
+  // @note: you can set the payload here, out of the payload.
+  // which is very useful when an action has no payload.
+}
+dispatch(action)
+
+// change mode to online
+// if actions save because of offline mode, they will dispatched, and the state will change to online, means that actions will not be saved until mode change back to offline
+let action = {
+  type: 'chooseYourOwnAdventure',
+  meta: 'network go-online',
+}
+dispatch(action)
+
+
+// mode change to offline, and any action that will be pushed, will be buffered until go-online or cancel-all meta dispatched
+let action = {
+  type: 'chooseYourOwnAdventure',
+  // meta can be here, or inside payload..
+  payload: {
+    meta: 'network go-offline'
+  }
+}
+dispatch(action)
+
+// clear all actions cached in buffer
+let action = {
+  type: 'chooseYourOwnAdventure',
+  // meta can be here, or inside payload..
+  payload: {
+    meta: 'network cancel-all'
+  }
+}
+dispatch(action)
+
 ```
 
 
@@ -256,4 +305,4 @@ dispatch(action)
 
 ### Thanks
 
-* [James](https://github.com/aretecode) for the great support                                                                                        
+* [James](https://github.com/aretecode) for the great support 	
