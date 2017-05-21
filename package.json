@@ -1,8 +1,8 @@
 {
   "escapedName": "redux-bus",
   "name": "redux-bus",
-  "version": "0.1.7",
-  "description": "queueing, stacking, buffering and undoing actions redux middleware",
+  "version": "0.2.0",
+  "description": "queueing, stacking, buffering, network state validation and undoing actions redux middleware",
   "main": "lib/index.js",
   "main:next": "lib/index.js",
   "npm": {
@@ -20,14 +20,17 @@
     "undoable",
     "redux",
     "middleware",
-    "hold",
     "connection",
     "state",
     "online",
     "network",
     "mode",
     "internet",
-    "offline"
+    "offline",
+    "pop",
+    "push",
+    "shift",
+    "unshift"
   ],
   "files": [
     "src",
@@ -37,17 +40,22 @@
   "author": "Wassim @challenger532",
   "license": "MIT",
   "bugs": {
-        "url": "https://github.com/challenger532/redux-bus/issues"
+    "url": "https://github.com/challenger532/redux-bus/issues"
   },
   "scripts": {
     "browserify": "mkdir -p dist && browserify -s ReduxBus lib/index.js > dist/redux-bus.js",
     "build": "babel src --out-dir lib",
     "dev": "true",
+    "go": "npm run build && npm run browserify",
     "lint": "eslint --cache --quiet src",
     "autofix": "eslint src/** --fix",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "ava-run": "ava test/ava",
+    "ava-watch": "ava test/ava --watch",
+    "jest-run": "jest --watch"
   },
   "devDependencies": {
+    "ava": "^0.19.1",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.7.6",
     "babel-eslint": "7.1.1",
@@ -60,10 +68,33 @@
     "eslint-config-aretecode": "^1.0.3",
     "eslint-loader": "1.5.0",
     "eslint-plugin-flowtype": "2.28.2",
-    "eslint-plugin-no-for-each": "0.1.14"
+    "eslint-plugin-no-for-each": "0.1.14",
+    "jest": "^20.0.3"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/challenger532/redux-bus.git"
+  },
+  "dependencies": {
+    "is_js": "^0.9.0",
+    "izz": "0.0.11"
+  },
+  "ava": {
+    "files": [
+      "src/text/ava/*.js"
+    ],
+    "source": [
+      "**/*.{js,jsx}",
+      "!dist/**/*"
+    ],
+    "concurrency": 5,
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "tap": true,
+    "powerAssert": false,
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   }
 }

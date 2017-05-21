@@ -2,7 +2,7 @@
 
 ### Redux middleware that makes it easy to create buffers with handlers.
 
-![](/home/challenger/Pictures/fifo.png)![](/home/challenger/Pictures/fifo2.png) 
+![](./docs/fifo.png)![](./docs/fifo2.png) 
 
 [![Join the chat at https://gitter.im/Challenger532/Lobby#](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Challenger532/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -14,10 +14,10 @@
 * [What is Redux Bus?](#what-is-redux-bus)
 * [Installation](#installation)
 * [Usage](#usage)
-  - [Reducer](#reducer)
-  - [Create your handler](#create-your-handler)
-  - [Create middleware](#create-middleware)
-  - [Dispatch Actions](#dispatch-actions)
+  - [Simple Example](#simple-example)
+  - [Adding the reducer](#adding-the-reducer)
+  - [Adding the middleware](#adding-the-middleware)
+  - [Dispatching actions](#dispatching-actions)
 * [Presets](#presets)
   - [Add the handlers](#add-the-handler)
   - [Use the network handler](#use-the-network-handler)
@@ -29,19 +29,35 @@
  * [Thanks](#thanks)
 
 ## What is Redux Bus
-redux middleware that allows using buffers for undoable actions, and potentially much more.
+Redux middleware that allows using buffers for undoable actions, and potentially much more.
 
 ## Installation
 
 To install the stable version:
 
 ```bash
-npm install --save redux-bus
+npm i -S redux-bus
+```
+or
+```bash
+yarn add redux-bus
 ```
 
 ## Usage
 
-### Reducer
+#### Simple example
+```js
+// bus: 'handler-name command-name'
+// all what you have to do is to add this line to have a lot of features..
+// many handers with many commans for each one exist..
+let action = {
+  type: 'INCREMENT_COUNTER', // or use any other type
+  bus: 'network save',
+}
+```
+
+
+#### Adding the reducer
 ```js
 // include the reducer while creating the store:
 import {reducer as bus} from 'redux-bus'
@@ -51,252 +67,217 @@ const reducers = combineReducers({
    bus,
  })
 ```
-
-### Create your handler
--**queue**: is the queue of the current handler
--**meta**: is the object that dispatched within the action.
-
-```js
-// your-magic-handler.js
-export default (store, next, action, queue, meta) => {
-   // here you can write your logic,
-   // see the examples below for more clarification
-   // return the queue that must be saved
-   return queue
-}
-```
-
-### Create Middleware
+#### Adding the middleware
 ```js
 import {createBus} from 'redux-bus'
-import yourHandler from './yourHandler'
 
-let handlers = {
-  // the name of the handler to be used later in action.meta
-  // can be anything
-  chooseYourOwnAdventure: yourHandler,
-  // here you can use any sample check ()
-  // ...
-}
-
-// creating the bus middleware
-const busMiddleware = createBus(handlers)
+const busMiddleware = createBus()
 
 // add the middleware alongside the rest of your middleware
 const middlewares = applyMiddleware([..., busMiddleware, ...])
 ```
 
-### Dispatch Actions
 
-#### shorthand
+
+#### Dispatching Actions
 ```js
 let action = {
-  // @NOTE:
-  // you can use any action type.
-  type: 'chooseYourOwnAdventure',
-  payload: {
-    // ... any other data in your payload
-    meta: 'anyHandlerName ACTION_NAME',
-  },
+  type: 'INCREMENT_COUNTER',
+  bus: 'handler-name command-name'
 }
-dispatch(action)
-```
 
-#### longhand
-```js
-let action = {
-  // @NOTE:
-  // you can use any action type.
-  meta: {
-    // the name of the handler
-    handler: 'chooseYourOwnAdventure',
-
-    // @example: DO, UNDO, PUSH, POP, CANCEL_ALL
-    action: 'ACTION_NAME',
-  },
-}
-dispatch(action)
-
-```
-
-## Presets
-### Add the handlers
-```js
-import {undoLastAction, holdActions, network, createBus} from 'redux-bus'
-
-let handlers = {
-  chooseYourOwnAdventure: yourHandlerHere,
-  undo: undoLastAction,
-  hold: holdActions,
-  network: network,
-}
-```
-
-### Use the *network* handler
-In this handler, if the state is offline, actions are buffered, until state changed to online, default state is online.
-four meta actions can be used:
-
-1-**save**
-
-2-**go-online**
-
-3-**go-offline**
-
-4-**cancel-all**
-
-```js
-// to save an action if it's offline mode,
+or
 
 let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'network save'
-  // @note: you can set the payload here, out of the payload.
-  // which is very useful when an action has no payload.
-}
-dispatch(action)
-
-// change mode to online
-// if actions save because of offline mode, they will dispatched, and the state will change to online, means that actions will not be saved until mode change back to offline
-let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'network go-online',
-}
-dispatch(action)
-
-
-// mode change to offline, and any action that will be pushed, will be buffered until go-online or cancel-all meta dispatched
-let action = {
-  type: 'chooseYourOwnAdventure',
-  // meta can be here, or inside payload..
-  payload: {
-    meta: 'network go-offline'
+  type: 'INCREMENT_COUNTER',
+  payload:{
+    bus: 'handler-name command-name'
   }
 }
-dispatch(action)
 
-// clear all actions cached in buffer
+or
+
 let action = {
-  type: 'chooseYourOwnAdventure',
-  // meta can be here, or inside payload..
-  payload: {
-    meta: 'network cancel-all'
-  }
+  type: 'INCREMENT_COUNTER',
+  bus: 'handler-name  command-name  prop1:value1  prop2:value2 ....'// add as many props as you want to pass them to the handler..
 }
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'handler-name  command-name  param1  param2  param3....'// add as many params as you want to pass them to the handler..
+}
+
 dispatch(action)
+ ```
 
-```
-
-
-### Use the *undoLastAction* handler
-In this handler, only one action is buffered, if new action pushed without doing the existing action, it will be ignored,
-four meta actions can be used:
-
-1-**PUSH**
-
-2-**UNDO**
-
-3-**DO**
-
-4-**DO_PUSH**
+#### Complete example
 
 ```js
-// to PUSH a new action
-// if an action already exists in the buffer, it will be removed, as if clicking undo
+/*
+  Check the network mode boolen when action is dispatched,
+  if mode is online it just pass it, else if mode is offline,
+  it saves the action to a buffer instead of dispatching it,
+  until mode changed to online, then it dispatch all buffered
+  actions.
+  when network state changes, mode must be updated.
+*/
 let action = {
-  type: 'chooseYourOwnAdventure',
-  payload: {
-    meta: 'undo PUSH'
+  type: 'INCREMENT_COUNTER', // or use any other type
+  bus: 'network save', // or bus: 'network save timeout:60'
+
+  /*
+    or
+    payload: {
+      bus: 'network save',
+    },
+  */
+}
+<button
+...
+onClick={() => dispatch(action)}
+...
+/>
+
+
+let action = {
+  type: 'ignored_type',
+  bus: 'network go-online',
   }
-  // @note: you can set the payload here, out of the payload.
-  //        which is very useful when an action has no payload.
-}
-dispatch(action)
+// this is just an example, and it doesn't work on react-native.
+window.addEventListener('online',  () => dispatch(action));
 
-// to UNDO the last buffered action
-// if an action existed in the buffer it will be removed
-let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'undo UNDO',
-}
-dispatch(action)
-
-// to DO the last buffered action
-// if an action existed in the buffer it will be removed
-let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'undo DO',
-}
-dispatch(action)
-
-// to DO the last buffered action and PUSH new one
-let action = {
-  type: 'chooseYourOwnAdventure',
-  payload: {
-    // @NOTE: meta can be a child of an action
-    meta: 'undo DO_PUSH',
-  },
-}
-dispatch(action)
 
 let action = {
-  type: 'chooseYourOwnAdventure',
-  payload: {
-    meta: 'anyHandlerName DO'
+  type: 'ignored_type',
+  bus: 'network go-offline',
   }
-}
-dispatch(action)
+window.addEventListener('offline',  () => dispatch(action));
 ```
 
 
-### Use the *holdActions* handler
-In this handler, action can't be dispatched by themselves. Actions are held until more than four actions in the buffer. When there are more than four, all held actions are dispatched at once.
 
-three meta actions can be used:
+## Built-in queues
+### Network queue
+In this queue, when action dispatched, the handler checks the network mode, if the mode is offline, actions are buffered, else if the mode is online, the action will be forwarded.
+when mode changed to online, the handler dispatch the buffered actions, default mode is online.
 
-1-**PUSH**
+<pre>
+<b>Four</b> commands available:</p>
 
-2-**CLEAR**
-
-3-**POP_ALL**
+  bus: 'network <b>save</b>'
+  bus: 'network <b>go-online</b>'
+  bus: 'network <b>go-offline</b>'
+  bus: 'network <b>update-all</b>'
+  bus: 'network <b>cancel-all</b>'
+</pre>
 
 ```js
-// to PUSH new action
 let action = {
-  type: 'chooseYourOwnAdventure',
+  type: 'INCREMENT_COUNTER',
+  bus: 'network save' // save the action to the queue if the mode is  `offline`
+                      // default mode is online, which means all actions will
+                      // be passes until go-offline
+
+  /*
+  or
+  payload:{
+    bus: 'network save'
+  }
+  */
+}
+dispatch(action)
+
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'network go-online', // change mode to online, dispatch all saved actions
+                            // that are not timed-out
+}
+
+
+let action = {
+  type: 'INCREMENT_COUNTER',
   payload: {
-    meta: 'hold PUSH'
-  },
+    bus: 'network go-offline' // change mode to offline, start saving actions in queue
+                              // with default timeout= 5 min
+  }
 }
-dispatch(action)
 
-// to UNDO or CLEAR all the buffered actions
 let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'hold CLEAR',
+  type: 'INCREMENT_COUNTER',
+  bus: 'network cancel-all' // clear all actoins saved in buffer
 }
-dispatch(action)
 
-// to DO or DISPATCH all the buffered actions,
-// must be four or less.
 let action = {
-  type: 'chooseYourOwnAdventure',
-  meta: 'hold POP_ALL',
+  type: 'INCREMENT_COUNTER',
+  bus: 'network update-all' // clear all timed-out actions saved in buffer,
+                            // dispatach all actions that are not timed-out
 }
-dispatch(action)
+
+
 ```
+
+
+### Undo queue
+This queue can be used for undoing actions, actions can be canceled before dispatched, and many other potentials..
+
+<pre>
+bus: 'undo <b>push</b>',
+bus: 'undo <b>unshift</b>',
+
+bus: 'undo <b>pop</b>',
+bus: 'undo <b>pop-undo</b>',
+
+bus: 'undo <b>shift</b>',
+bus: 'undo <b>shift-undo</b>',
+
+bus: 'undo <b>do-all</b>',
+bus: 'undo <b>cancel-all</b>',
+</pre>
+
+```js
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'undo PUSH', // PUSH a new action (ignore or undo the current one if exist)
+}
+
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'undo UNDO',
+}
+
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'undo DO', // DO the last buffered action, re-dispatch it.
+}
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  bus: 'undo DO_PUSH',// DO the last buffered action and PUSH new one
+}
+
+let action = {
+  type: 'INCREMENT_COUNTER',
+  payload: {
+    // @NOTE: bus can be a child of an payload
+    bus: 'undo DO'
+  }
+}
+```
+
+
 
 ### TODO
-- [x] create one size action handler, that can undo last dispatched action
-- [ ] create pre defined handler for saving offline dispatched actions
+- [x] create pre defined handler for saving offline dispatched actions
 - [ ] create pre defined handler for delaying actions for specific period
 - [ ] add some docs about usage with redux-ack
-- [ ] create action generator that simplify the module
-- [ ] add tests
+- [x] add tests
 
 ### Examples
 
-* [Hold some actions](https://github.com/challenger532/redux-bus/blob/master/src/presets/holdActions.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/holdActions.js))
-* [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/presets/undoLastAction.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/undoLastAction.js))
+* [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js))
 
 
 ### Resources
@@ -306,4 +287,5 @@ dispatch(action)
 
 ### Thanks
 
-* [James](https://github.com/aretecode) for the great support 	
+* [James](https://github.com/aretecode) for the great support
+

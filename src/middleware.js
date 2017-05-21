@@ -1,75 +1,97 @@
-export default middlewares => store => next => action => {
-  // getting meta from action
-  let meta = action.meta
+import is from 'izz'
+import parse from './parse'
+import handle from './handle'
 
-  // meta object can be in action itself or in payload,
-  // if action has .meta,
-  // ignore that of the payload
-  if (!meta) {
-    if (action.payload && action.payload.meta) {
-      meta = action.payload.meta
-    }
+import presets from './presets'
+
+export default (options = {}, custom) => {
+
+  // all handlers, the build-in and the custom...
+  let handlers = {
+    ...presets,
+    ...custom,
   }
 
-  meta = metaParser(meta)
+  return store => next => action => {
+    // getting bus from action
+    let busses = action.bus
+    delete action.bus
 
-  // ignore normal actions with no .meta
-  if (!meta) return next(action)
-  const {handler} = meta
-  let middleware = middlewares[handler]
-
-  if (middleware) {
-    // bus has not been initialized, so it must be validated..
-    let bus = store.getState().bus || {}
-
-    // queue is an object
-    // so it can has properties
-    // other that just buffer
-    // for future possible features..
-    let queue = bus[handler] || {buffer: []}
-
-    // the handler is attached and passed along
-    // so we take it out of the action
-    action = Object.assign({}, action)
-    delete action.meta
-    delete action.payload.meta
-
-    // this middleware will take a queue and must return a queue
-    queue =  middleware(store, next, action, queue, meta)
-
-    // add validation that the return of the middleware is queue
-    if (!queue.buffer && !queue.buffer.length) return
-
-    // actions to update the buffer
-    action = {
-      type: '@@bus/UPDATE_QUEUE',
-      payload: {
-        queue,
-        handler,
-      },
+    // bus object can be in action itself or in payload,
+    // if action has .bus,
+    // ignore that of the payload
+    if (action.payload && action.payload.bus) {
+      if (!busses) busses = action.payload.bus
+      delete action.payload.bus
     }
-    store.dispatch(action)
+
+    if (!busses) return next(action)
+
+    return manageBusses(handlers, options, store, next, action, busses)
   }
-  return next(action)
 }
 
-// fix .meta,
-// allowing actions to be dispatch with .meta as string value
-// @example:
-// `meta: 'undoLasaction UNDO'`
-const metaParser = meta => {
-  if (!meta) return
+function manageBusses(handlers, options, store, next, action, busses) {
 
-  if (typeof meta === 'string') {
-    const content = meta.split(' ')
-    const length = content.length
-    const result = {
-      handler: length > 0 ? (content[0] || '') : '',
-      action: length > 1 ? (content[1] || '') : '',
+  // ensure that busses is an array of objects ... [bus1, bus2,...]
+  let parsedBusses = parse(busses)
+
+  // if parsedBusses are not a real object.. no need to continue..
+  if (!parsedBusses) return next(action)
+
+  // getting the first bus that should be handeled here...
+  let bus = parsedBusses.shift()
+
+  // save the rest of bussess within the action for another calls
+  if (parsedBusses.length) action.bus = parsedBusses
+
+  return manage(handlers, options, store, next, action, bus)
+}
+
+function manage(handlers, options, store, next, action, bus) {
+
+  // ensure that bus is an object with data inside...
+  if (is.empty(bus) || is.not.object(bus)) return next(action)
+
+  let {handler: handlerName, command, props, params = []} = bus
+
+  // getting the target handler function...
+  let handler = handlers[handlerName]
+
+  // ensure that handler is a function...
+  if (is.not.function(handler)) return next(action)
+
+  let handlerOptions
+
+  if (options && is.json(options))
+    handlerOptions = options[handlerName] || {}
+
+  // getting store's state
+  let state = store.getState() || {}
+
+  // getting all bus queues from store..
+  let busQueues = state.bus || {}
+
+  // getting the target queue of the current handler...
+  let handlerQueue = busQueues[handlerName] || {
+      buffer: [],
     }
-    return result
+
+  if (!handlerQueue.buffer) handlerQueue.buffer = []
+  // call the handler with all the specific data,
+  // get the updated queue to be saved in the state..
+  let newHanderQueue = handler(handlerOptions, store, next, action, handlerQueue, command, props, ...params)
+
+  // if the handler did not return a queue, ignore it
+  if (!newHanderQueue) return
+
+  // dispatch this action with the new queue..
+  let busAction = {
+    type: '@@bus/UPDATE_QUEUE',
+    payload: {
+      handler: handlerName,
+      queue: newHanderQueue,
+    }
   }
-
-  return meta
-
+  store.dispatch(busAction)
 }

@@ -7,9 +7,9 @@ export default (state = {}, action) => {
   }
 }
 
-function updateQueue(bus = {}, {payload: {queue, handler}}) {
+function updateQueue(state = {}, {payload: {queue, handler}}) {
   return {
-    ...bus,
+    ...state,
     [handler]: queue,
   }
 }
