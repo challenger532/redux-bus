@@ -2,7 +2,7 @@
 
 ### Redux middleware that makes it easy to create buffers with handlers.
 
-![](./docs/fifo.png)![](./docs/fifo2.png) 
+![](./docs/fifo.png)![](./docs/fifo2.png)
 
 [![Join the chat at https://gitter.im/Challenger532/Lobby#](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Challenger532/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -19,10 +19,8 @@
   - [Adding the middleware](#adding-the-middleware)
   - [Dispatching actions](#dispatching-actions)
 * [Presets](#presets)
-  - [Add the handlers](#add-the-handler)
-  - [Use the network handler](#use-the-network-handler)
-  - [Use the undoLastAction handler](#use-the-undolastaction-handler)
-  - [Use the holdActions handler](#use-the-holdactions-handler)
+  - [Network handler](#network-handler)
+  - [Undo handler](#undo-handler)
  * [TODO](#todo)
  * [Examples](#examples)
  * [Resources](#resources)
@@ -157,13 +155,11 @@ window.addEventListener('offline',  () => dispatch(action));
 
 
 ## Built-in queues
-### Network queue
+### Network handler
 In this queue, when action dispatched, the handler checks the network mode, if the mode is offline, actions are buffered, else if the mode is online, the action will be forwarded.
 when mode changed to online, the handler dispatch the buffered actions, default mode is online.
 
 <pre>
-<b>Four</b> commands available:</p>
-
   bus: 'network <b>save</b>'
   bus: 'network <b>go-online</b>'
   bus: 'network <b>go-offline</b>'
@@ -218,7 +214,7 @@ let action = {
 ```
 
 
-### Undo queue
+### Undo handler
 This queue can be used for undoing actions, actions can be canceled before dispatched, and many other potentials..
 
 <pre>
@@ -277,7 +273,8 @@ let action = {
 
 ### Examples
 
-* [Undo or confirm last action ](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js))
+* [Undo handler](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/undo/index.js))
+* [Network handler](https://github.com/challenger532/redux-bus/blob/master/src/presets/network/index.js) ([source](https://github.com/challenger532/redux-bus/blob/master/src/presets/network/index.js))
 
 
 ### Resources
