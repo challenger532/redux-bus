@@ -1,7 +1,7 @@
 {
   "escapedName": "redux-bus",
   "name": "redux-bus",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "queueing, stacking, buffering, network state validation and undoing actions redux middleware",
   "main": "lib/index.js",
   "main:next": "lib/index.js",
@@ -76,7 +76,6 @@
     "url": "git+ssh://git@github.com/challenger532/redux-bus.git"
   },
   "dependencies": {
-    "is_js": "^0.9.0",
     "izz": "0.0.11"
   },
   "ava": {
@@ -89,9 +88,9 @@
     ],
     "concurrency": 5,
     "failFast": true,
-    "failWithoutAssertions": false,
-    "tap": true,
-    "powerAssert": false,
+    "failWithoutAssertions": true,
+    "tap": false,
+    "powerAssert": true,
     "require": [
       "babel-register"
     ],

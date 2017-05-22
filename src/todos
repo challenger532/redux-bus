@@ -1,0 +1,16 @@
+-[ ] add docs(options, custome) to createBus example
+-[ ] update complete example intro
+-[ ] add complete example to content
+-[ ] add props timeout to complete example
+-[ ] fix actions names in both undo and network handlers
+-[ ] fix intro and minimize it with network handler(or remove it)
+-[ ] remove intro from both and add more to comments
+-[ ] fix todos list add the names of the other handlers
+-[ ] add docs for adding custom handler
+-[ ] add more docs about params and props
+-[ ] add more jsdocs for the handlers
+-[ ] find better ways of adding docs
+-[ ] add gif for every buffer
+-[ ] add delay handler
+-[ ] add debouncer handler
+-[ ] add capsulator handler
