@@ -80,11 +80,10 @@
   },
   "ava": {
     "files": [
-      "src/text/ava/*.js"
+      "test/ava/*.js"
     ],
     "source": [
-      "**/*.{js,jsx}",
-      "!dist/**/*"
+      "**/*.{js,jsx}"
     ],
     "concurrency": 5,
     "failFast": true,

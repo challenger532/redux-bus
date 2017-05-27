@@ -159,13 +159,13 @@ window.addEventListener('offline',  () => dispatch(action));
 In this queue, when action dispatched, the handler checks the network mode, if the mode is offline, actions are buffered, else if the mode is online, the action will be forwarded.
 when mode changed to online, the handler dispatch the buffered actions, default mode is online.
 
-<pre>
-  bus: 'network <b>save</b>'
-  bus: 'network <b>go-online</b>'
-  bus: 'network <b>go-offline</b>'
-  bus: 'network <b>update-all</b>'
-  bus: 'network <b>cancel-all</b>'
-</pre>
+```js
+  bus: 'network save'
+  bus: 'network go-online'
+  bus: 'network go-offline'
+  bus: 'network update-all'
+  bus: 'network cancel-all'
+  ```
 
 ```js
 let action = {
@@ -217,19 +217,19 @@ let action = {
 ### Undo handler
 This queue can be used for undoing actions, actions can be canceled before dispatched, and many other potentials..
 
-<pre>
-bus: 'undo <b>push</b>',
-bus: 'undo <b>unshift</b>',
+```js
+bus: 'undo push'
+bus: 'undo unshift'
 
-bus: 'undo <b>pop</b>',
-bus: 'undo <b>pop-undo</b>',
+bus: 'undo pop'
+bus: 'undo pop-undo'
 
-bus: 'undo <b>shift</b>',
-bus: 'undo <b>shift-undo</b>',
+bus: 'undo shift'
+bus: 'undo shift-undo'
 
-bus: 'undo <b>do-all</b>',
-bus: 'undo <b>cancel-all</b>',
-</pre>
+bus: 'undo do-all'
+bus: 'undo cancel-all'
+```
 
 ```js
 let action = {
@@ -268,7 +268,9 @@ let action = {
 ### TODO
 - [x] create pre defined handler for saving offline dispatched actions
 - [ ] create pre defined handler for delaying actions for specific period
+- [ ] create pre defined handler for debouncing actions for specific type
 - [ ] add some docs about usage with redux-ack
+- [ ] connect with redux-form
 - [x] add tests
 
 ### Examples
@@ -285,4 +287,3 @@ let action = {
 ### Thanks
 
 * [James](https://github.com/aretecode) for the great support
-
